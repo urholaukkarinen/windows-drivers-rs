@@ -57,6 +57,7 @@ fn generate_wdf(out_path: &Path, config: Config) -> Result<(), ConfigError> {
         bindgen::Builder::wdk_default(vec!["src/wdf-input.h"], config)?
             .with_codegen_config((CodegenConfig::TYPES | CodegenConfig::VARS).complement())
             .allowlist_file("(?i).*wdf.*") // Only generate for files that are prefixed with (case-insensitive) wdf (ie.
+            .allowlist_file("(?i).*acx.*") // Only generate for files that are prefixed with (case-insensitive) wdf (ie.
             // /some/path/WdfSomeHeader.h), to prevent duplication of code in ntddk.rs
             .generate()
             .expect("Bindings should succeed to generate")

@@ -88,6 +88,17 @@ pub struct KMDFConfig {
     pub kmdf_version_major: u8,
     /// Minor KMDF Version
     pub kmdf_version_minor: u8,
+    /// ACX configuration
+    pub acx_config: Option<ACXConfig>,
+}
+
+/// The configuration parameters for ACX drivers
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ACXConfig {
+    /// Major ACX Version
+    pub acx_version_major: u8,
+    /// Minor ACX Version
+    pub acx_version_minor: u8,
 }
 
 /// The configuration parameters for UMDF drivers
@@ -353,6 +364,23 @@ impl Config {
                         .canonicalize()?
                         .strip_extended_length_path_prefix()?,
                 );
+
+                if let Some(acx_config) = kmdf_config.acx_config {
+                    let acx_include_path = windows_sdk_include_path.join(format!(
+                        "km/acx/km/{}.{}",
+                        acx_config.acx_version_major, acx_config.acx_version_minor
+                    ));
+                    if !acx_include_path.is_dir() {
+                        return Err(ConfigError::DirectoryNotFound {
+                            directory: acx_include_path.to_string_lossy().into(),
+                        });
+                    }
+                    include_paths.push(
+                        acx_include_path
+                            .canonicalize()?
+                            .strip_extended_length_path_prefix()?,
+                    );
+                }
             }
             DriverConfig::UMDF(umdf_config) => {
                 let umdf_include_path = include_directory.join(format!(
@@ -433,6 +461,23 @@ impl Config {
                         .canonicalize()?
                         .strip_extended_length_path_prefix()?,
                 );
+
+                if let Some(acx_config) = kmdf_config.acx_config {
+                    let acx_library_path = windows_sdk_library_path.join(format!(
+                        "acx/km/{}.{}",
+                        acx_config.acx_version_major, acx_config.acx_version_minor
+                    ));
+                    if !acx_library_path.is_dir() {
+                        return Err(ConfigError::DirectoryNotFound {
+                            directory: acx_library_path.to_string_lossy().into(),
+                        });
+                    }
+                    library_paths.push(
+                        acx_library_path
+                            .canonicalize()?
+                            .strip_extended_length_path_prefix()?,
+                    );
+                }
             }
             DriverConfig::UMDF(umdf_config) => {
                 let umdf_library_path = library_directory.join(format!(
@@ -489,7 +534,7 @@ impl Config {
                 println!("cargo:rustc-link-lib=hal");
                 println!("cargo:rustc-link-lib=wmilib");
             }
-            DriverConfig::KMDF(_) => {
+            DriverConfig::KMDF(kmdf_config) => {
                 // Emit KMDF-specific libraries to link to
                 println!("cargo:rustc-link-lib=BufferOverflowFastFailK");
                 println!("cargo:rustc-link-lib=ntoskrnl");
@@ -497,6 +542,9 @@ impl Config {
                 println!("cargo:rustc-link-lib=wmilib");
                 println!("cargo:rustc-link-lib=WdfLdr");
                 println!("cargo:rustc-link-lib=WdfDriverEntry");
+                if kmdf_config.acx_config.is_some() {
+                    println!("cargo:rustc-link-lib=acxstub");
+                }
             }
             DriverConfig::UMDF(umdf_config) => {
                 // Emit UMDF-specific libraries to link to
@@ -614,6 +662,10 @@ impl Default for KMDFConfig {
         Self {
             kmdf_version_major: 1,
             kmdf_version_minor: 33,
+            acx_config: Some(ACXConfig {
+                acx_version_major: 1,
+                acx_version_minor: 1,
+            }),
         }
     }
 }

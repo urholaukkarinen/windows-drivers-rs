@@ -5127,6 +5127,22 @@ pub const WDF_S0_IDLE_DEFAULT_VALUE_NAME: &[u8; 29] = b"WdfDefaultIdleInWorkingS
 pub const WDF_SX_WAKE_DEFAULT_VALUE_NAME: &[u8; 29] = b"WdfDefaultWakeFromSleepState\0";
 pub const WDF_REGKEY_DEVICE_SUBKEY: u32 = 0;
 pub const WDF_REGKEY_DRIVER_SUBKEY: u32 = 0;
+pub const ACX_FIRST_VERSION_SUPPORTING_CLIENT_VERSION_HIGHER_THAN_FRAMEWORK: u32 = 0;
+pub const ACX_ALWAYS_AVAILABLE_FUNCTION_COUNT: u32 = 221;
+pub const ACX_DEVICEINIT_CONFIG_CONTEXT_SIZE: u32 = 4;
+pub const ACX_DEVICE_CONFIG_CONTEXT_SIZE: u32 = 4;
+pub const ACX_PROPERTY_ITEM_FLAG_NONE: u32 = 0;
+pub const ACX_PROPERTY_ITEM_FLAG_GET: u32 = 1;
+pub const ACX_PROPERTY_ITEM_FLAG_SET: u32 = 2;
+pub const ACX_PROPERTY_ITEM_FLAG_BASICSUPPORT: u32 = 512;
+pub const ACX_METHOD_ITEM_FLAG_NONE: u32 = 0;
+pub const ACX_METHOD_ITEM_FLAG_SEND: u32 = 1;
+pub const ACX_METHOD_ITEM_FLAG_BASICSUPPORT: u32 = 512;
+pub const ACX_EVENT_ITEM_FLAG_NONE: u32 = 0;
+pub const ACX_EVENT_ITEM_FLAG_ENABLE: u32 = 1;
+pub const ACX_EVENT_ITEM_FLAG_BASICSUPPORT: u32 = 512;
+pub const ACX_MAX_JACK_SINK_DESCRIPTION_NAME_LENGTH: u32 = 32;
+pub const ACX_AUDIOMODULE_MAX_NAME_CCH_SIZE: u32 = 128;
 extern "C" {
     pub static mut KeNumberProcessors: CCHAR;
 }
@@ -6176,3 +6192,121 @@ extern "C" {
 extern "C" {
     pub static SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX: UNICODE_STRING;
 }
+extern "C" {
+    pub static mut AcxFunctions: [ACXFUNC; 0usize];
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXMANAGER_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXOBJECTBAG_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXEVENT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXEVENTDATA_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXPNPEVENT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXCIRCUIT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXPIN_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXELEMENT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXAUDIOENGINE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXSTREAMAUDIOENGINE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXKEYWORDSPOTTER_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXVOLUME_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXMUTE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXJACK_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXMICARRAYGEOMETRY_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXPEAKMETER_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXSTREAM_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXDATAFORMAT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXDATAFORMATLIST_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXTARGETCIRCUIT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXTARGETPIN_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXTARGETELEMENT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXTARGETSTREAM_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXTARGETFACTORYCIRCUIT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXSTREAMBRIDGE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXCOMPOSITE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXCOMPOSITEFACTORY_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXFACTORYCIRCUIT_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXCIRCUITMANAGER_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXCOMPOSITETEMPLATE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXCIRCUITTEMPLATE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static _WDF_WdfCustomType_ACXAUDIOMODULE_TYPE_INFO: WDF_OBJECT_CONTEXT_TYPE_INFO;
+}
+extern "C" {
+    pub static mut AcxDriverGlobals: PACX_DRIVER_GLOBALS;
+}
+extern "C" {
+    pub static mut AcxClientVersionHigherThanFramework: BOOLEAN;
+}
+extern "C" {
+    pub static mut AcxFunctionCount: ULONG;
+}
+extern "C" {
+    pub static mut AcxStructureCount: ULONG;
+}
+extern "C" {
+    pub static mut AcxStructures: WDF_STRUCT_INFO;
+}
+extern "C" {
+    pub static mut AcxFrameworkExtensionName: PCWSTR;
+}
+pub const AcxMinimumVersionRequired: ULONG = 1;

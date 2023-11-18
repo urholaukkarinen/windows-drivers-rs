@@ -28,11 +28,7 @@ use proc_macro2::TokenStream as TokenStream2;
 use quote::{format_ident, quote};
 use syn::{
     parse::{Parse, ParseStream},
-    parse2,
-    Error,
-    Expr,
-    Ident,
-    Token,
+    parse2, Error, Expr, Ident, Token,
 };
 
 /// A procedural macro that allows WDF functions to be called by name.
@@ -73,6 +69,14 @@ use syn::{
 #[proc_macro]
 pub fn call_unsafe_wdf_function_binding(input_tokens: TokenStream) -> TokenStream {
     call_unsafe_wdf_function_binding_impl(TokenStream2::from(input_tokens)).into()
+}
+
+/// A procedural macro that allows ACX functions to be called by name.
+///
+/// See `call_unsafe_wdf_function_binding` for more information.
+#[proc_macro]
+pub fn call_unsafe_acx_function_binding(input_tokens: TokenStream) -> TokenStream {
+    call_unsafe_acx_function_binding_impl(TokenStream2::from(input_tokens)).into()
 }
 
 struct CallUnsafeWDFFunctionInput {
@@ -138,6 +142,50 @@ fn call_unsafe_wdf_function_binding_impl(input_tokens: TokenStream2) -> TokenStr
         } else {
             quote! {
                 #wdf_function_call_tokens
+            }
+        }
+    }
+}
+
+fn call_unsafe_acx_function_binding_impl(input_tokens: TokenStream2) -> TokenStream2 {
+    let CallUnsafeWDFFunctionInput {
+        function_pointer_type,
+        function_table_index,
+        function_arguments,
+    } = match parse2::<CallUnsafeWDFFunctionInput>(input_tokens) {
+        Ok(syntax_tree) => syntax_tree,
+        Err(err) => return err.to_compile_error(),
+    };
+
+    let acx_function_call_tokens = quote! {
+        {
+            // Get handle to ACX function from the function table
+            let acx_function: wdk_sys::#function_pointer_type = Some(core::mem::transmute(
+                wdk_sys::ACX_FUNCTION_TABLE[wdk_sys::_ACXFUNCENUM::#function_table_index as usize],
+            ));
+
+            // Call the ACX function with the supplied args.
+            if let Some(acx_function) = acx_function {
+                (acx_function)(
+                    wdk_sys::AcxDriverGlobals,
+                    #function_arguments
+                )
+            } else {
+                unreachable!("Option should never be None");
+            }
+        }
+    };
+
+    cfg_if! {
+        if #[cfg(feature = "nightly")] {
+            // FIXME: parse return type of function pointer and only emit
+            // core::hint::must_use if the return type is not ()
+            quote! {
+                core::hint::must_use(#acx_function_call_tokens)
+            }
+        } else {
+            quote! {
+                #acx_function_call_tokens
             }
         }
     }

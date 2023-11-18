@@ -63,10 +63,17 @@ impl BuilderExt for Builder {
                         vec![]
                     }
                     DriverConfig::KMDF(kmdf_config) => {
-                        vec![
+                        let mut defs = vec![
                             format!("KMDF_VERSION_MAJOR={}", kmdf_config.kmdf_version_major),
                             format!("KMDF_VERSION_MINOR={}", kmdf_config.kmdf_version_minor),
-                        ]
+                        ];
+                        if let Some(acx_config) = kmdf_config.acx_config {
+                            defs.extend_from_slice(&[
+                                format!("ACX_VERSION_MAJOR={}", acx_config.acx_version_major),
+                                format!("ACX_VERSION_MINOR={}", acx_config.acx_version_minor),
+                            ]);
+                        }
+                        defs
                     }
                     DriverConfig::UMDF(umdf_config) => {
                         let mut umdf_definitions = vec![

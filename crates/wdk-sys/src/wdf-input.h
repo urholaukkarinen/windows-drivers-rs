@@ -4,3 +4,5 @@
 #include "ntifs.h"
 #include "ntddk.h"
 #include "wdf.h"
+
+#include "acx.h"

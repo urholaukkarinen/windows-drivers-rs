@@ -76,6 +76,28 @@ lazy_static! {
     };
 }
 
+lazy_static! {
+    #[allow(missing_docs)]
+    pub static ref ACX_FUNCTION_TABLE: &'static [ACXFUNC] = {
+        debug_assert!(
+            isize::try_from(
+                // SAFETY: `AcxFunctionCount` is generated as a mutable static, but is not supposed to be mutated by WDF.
+                unsafe { AcxFunctionCount } as usize * core::mem::size_of::<ACXFUNC>()
+            ).is_ok()
+        );
+
+        // SAFETY: This is safe because:
+        //         1. `AcxFunctions` is valid for reads for `AcxFunctionCount` * `core::mem::size_of::<ACXFUNC>()`
+        //            bytes, and is guaranteed to be aligned and it must be properly aligned.
+        //         2. `AcxFunctions` points to `AcxFunctionCount` consecutive properly initialized values of
+        //            type `ACXFUNC`.
+        //         3. WDF does not mutate the memory referenced by the returned slice for for its entire `'static' lifetime.
+        //         4. The total size, `AcxFunctionCount` * `core::mem::size_of::<ACXFUNC>()`, of the slice must be no
+        //            larger than `isize::MAX`. This is proven by the above `debug_assert!`.
+        unsafe { core::slice::from_raw_parts(AcxFunctions.as_ptr(), AcxFunctionCount as usize) }
+    };
+}
+
 #[allow(missing_docs)]
 #[must_use]
 #[allow(non_snake_case)]
